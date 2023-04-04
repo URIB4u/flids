@@ -1,0 +1,64 @@
+version: '3'
+services:
+  aggregator: 
+    image: fedlearn  
+    ports: 
+      - "8080:8080"
+    volumes:
+      - /FedLearn:/FedLearn
+    command: python3  /FedLearn/aggregator.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  agent1:
+    depends_on:
+      - aggregator
+    image: fedlearn 
+    command: python3  /FedLearn/agent1.py
+    volumes:
+      - /FedLearn:/FedLearn
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  
+  agent2:
+    image: fedlearn 
+    volumes:
+      - /FedLearn:/FedLearn
+    command: python3  /FedLearn/agent2.py
+  agent3:
+    image: fedlearn 
+    volumes:
+      - /FedLearn:/FedLearn
+    command: python3  /FedLearn/agent3.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  agent4:
+    image: fedlearn 
+    volumes:
+      - /FedLearn:/FedLearn 
+    command: python3  FedLearn/agent4.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+ 
